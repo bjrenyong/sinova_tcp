@@ -1,0 +1,23 @@
+option java_package = "sinova.tcp.protocol.standard.demo";
+
+import "resend_info.proto";
+
+message SmsMtReq {
+    //网络重发信息
+    optional ResendInfo resend_info = 1;
+    //客户提供的下行短信唯一序列号
+    required int64 client_mt_sequence = 2;
+    //目标手机号码
+    required string mobile_num = 3;
+    //短信内容
+    required string sms_content = 4;
+    //短信发送优先级
+    required int32 priority = 5;
+}
+
+message SmsMtResp {
+    //客户提供的下行短信唯一序列号
+    required int64 client_mt_sequence = 2;
+    //系统提供的下行短信唯一序列号
+    required int64 sys_mt_sequence = 3;
+}

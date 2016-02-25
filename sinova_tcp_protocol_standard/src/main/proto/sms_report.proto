@@ -1,0 +1,24 @@
+option java_package = "sinova.tcp.protocol.standard.demo";
+
+import "resend_info.proto";
+
+message SmsReportReq {
+    //网络重发信息
+    optional ResendInfo resend_info = 1;
+    //状态报告所属的用户ID
+    required int32 user_id = 2;
+    //客户提供的下行短信唯一序列号
+    required int64 client_mt_sequence = 3;
+    //系统提供的下行短信唯一序列号
+    required int64 sys_mt_sequence = 4;
+    //状态报告码
+    required string report_code = 5;
+}
+
+message SmsReportResp {
+    //客户提供的下行短信唯一序列号
+    required int64 client_mt_sequence = 2;
+    //系统提供的下行短信唯一序列号
+    required int64 sys_mt_sequence = 3;
+
+}

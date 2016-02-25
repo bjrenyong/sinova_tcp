@@ -1,0 +1,8 @@
+option java_package = "sinova.tcp.protocol.standard.demo";
+
+message ResendInfo {
+    // 发送次数
+    required int32 sendTimes = 1;
+    // 上次发送时间
+    required int64 lastSendTime = 2;
+}
