@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<users>
+	<user userId="1" userName="test1" password="password" ip="127.0.0.1" secretKey="adefa129d0">
+		<!-- connectionType:1-全双工;2-仅下行;3-仅上行 -->
+		<connectionType>1</connectionType>
+		<!-- 上行滑动窗口大小，connectionType=1或3时有效 -->
+		<moWindowSize>32</moWindowSize>
+		<!-- 发送速度控制，负数表示不限速 -->
+		<sendSpeedMax>100</sendSpeedMax>
+		<!-- 接收速度控制，负数表示不限速 -->
+		<receiveSpeedMax>100</receiveSpeedMax>
+	</user>
+	<user userId="3" userName="test1" password="password" ip="127.0.0.1" secretKey="adefa129d0">
+		<!-- connectionType:1-全双工;2-仅下行;3-仅上行 -->
+		<connectionType>3</connectionType>
+		<!-- 上行滑动窗口大小，connectionType=1或3时有效 -->
+		<moWindowSize>32</moWindowSize>
+		<!-- 发送速度控制，负数表示不限速 -->
+		<sendSpeedMax>-1</sendSpeedMax>
+		<!-- 接收速度控制，负数表示不限速 -->
+		<receiveSpeedMax>-1</receiveSpeedMax>
+	</user>
+</users>

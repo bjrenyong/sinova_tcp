@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean id="smsReportTestAction" class="sinova.tcp.server.demo.test.SmsReportTestAction">
+		<property name="userIdArr">
+			<value>1</value>
+		</property>
+		<property name="smsReportQueueProducer" ref="smsReportQueueProducer" />
+	</bean>
+
+	<bean id="smsReportSyncTestAction" class="sinova.tcp.server.demo.test.SmsReportSyncTestAction">
+		<property name="userId" value="1" />
+		<property name="serverConnectService" ref="serverConnectService" />
+	</bean>
+
+	<!-- 配置所有的测试用命令 -->
+	<util:list id="testCommands" value-type="sinova.tcp.framework.test.TestCommand">
+		<bean class="sinova.tcp.framework.test.TestCommand" c:command="help" c:commandRegex="help" c:useage="print all commands"
+			c:testAction-ref="helpTestAction" />
+		<bean class="sinova.tcp.framework.test.TestCommand" c:command="exit" c:commandRegex="exit" c:useage="system exit"
+			c:testAction-ref="exitTestAction" />
+		<bean class="sinova.tcp.framework.test.TestCommand" c:command="sms report [sendCount]" c:commandRegex="sms report [0-9]+"
+			c:useage="sms report sendCount times" c:testAction-ref="smsReportTestAction" />
+		<bean class="sinova.tcp.framework.test.TestCommand" c:command="sms sync report [sendCount]" c:commandRegex="sms sync report [0-9]+"
+			c:useage="sms sync report sendCount times" c:testAction-ref="smsReportSyncTestAction" />
+	</util:list>
+
+	<!-- 状态报告上行文件到队列生产者 -->
+	<bean id="smsReportFileToQueueProducer" class="sinova.tcp.server.demo.test.SmsReportFileToQueueProducer"
+		init-method="init">
+		<!-- tcp client状态，扫描得到bean -->
+		<property name="tcpServerStatus" ref="tcpAppStatus" />
+		<property name="sourceDir" value="../sinova_tcp_server/source/sms_report" />
+		<property name="targetDir" value="../sinova_tcp_server/target/sms_report" />
+		<property name="smsReportQueue" ref="smsReportQueue" />
+		<property name="threadName" value="smsReportFileToQueueProducer" />
+	</bean>
+
+</beans>

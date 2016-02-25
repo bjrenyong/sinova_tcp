@@ -1,0 +1,1 @@
+java -Xms1024m -Xmx1024m -XX:+UseParallelGC -XX:ParallelGCThreads=16 -XX:+UseParallelOldGC -cp ../lib/*;../classes sinova.tcp.server.demo.test.ServerMain

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<context:property-placeholder location="tcp_server.properties" ignore-unresolvable="true" />
+
+	<!-- 扫描框架公共包及其protostuff实现 -->
+	<context:component-scan base-package="sinova.tcp.framework.common">
+		<!-- 排除标准版实现 -->
+		<context:exclude-filter type="regex" expression="sinova.tcp.framework.common.standard.*" />
+	</context:component-scan>
+	<!-- 扫描框架server包 -->
+	<context:component-scan base-package="sinova.tcp.framework.server" />
+	<!-- 扫描 demo服务包 -->
+	<context:component-scan base-package="sinova.tcp.server.demo.service" />
+	<!-- 扫描demo sender包 -->
+	<context:component-scan base-package="sinova.tcp.server.demo.sender" />
+
+	<!-- 以下注入用于测试 -->
+	<!-- 扫描框架测试包 -->
+	<context:component-scan base-package="sinova.tcp.framework.test" />
+	<!-- 扫描server测试包 -->
+	<context:component-scan base-package="sinova.tcp.server.demo.test" />
+
+	<import resource="tcp_server_config.xml" />
+	<import resource="tcp_server_sender.xml" />
+	<import resource="tcp_server_test.xml" />
+</beans>

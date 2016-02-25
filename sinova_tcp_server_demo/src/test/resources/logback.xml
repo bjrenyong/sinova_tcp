@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+	<property name="USER_HOME" value="../logs/sinova_tcp_server" />
+
+	<!-- 日志输出到控制台 -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} %-5p[%F:%L][%t] - %msg%n</pattern>
+		</encoder>
+	</appender>
+	<!-- common log -->
+	<appender name="commonlog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${USER_HOME}/common.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${USER_HOME}/common.%d{yyyy-MM-dd}.log
+			</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%date{MM-dd HH:mm:ss} %-5p[%F:%L][%t] - %msg%n</Pattern>
+		</layout>
+	</appender>
+	<!-- tcp speed log -->
+	<appender name="tcpSpeedlog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${USER_HOME}/tcp_speed.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${USER_HOME}/tcp_speed.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%date{MM-dd HH:mm:ss} %-5p[%F:%L][%t] - %msg%n</Pattern>
+		</layout>
+	</appender>
+	<appender name="errorlog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<File>${USER_HOME}/error.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<FileNamePattern>${USER_HOME}/error.%i.log</FileNamePattern>
+			<MinIndex>1</MinIndex>
+			<MaxIndex>30</MaxIndex>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>50MB</MaxFileSize>
+		</triggeringPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%date{MM-dd HH:mm:ss} %-5p[%F:%L][%t] - %msg%n</Pattern>
+		</layout>
+	</appender>
+	<!-- 监控信息单独输出 -->
+	<logger name="sinova.tcp.framework.common.monitor.TcpSpeedRecord" level="info" additivity="false">
+		<appender-ref ref="tcpSpeedlog" />
+	</logger>
+	<root level="info">
+		<!-- <appender-ref ref="STDOUT"/> -->
+		<appender-ref ref="commonlog" />
+		<appender-ref ref="errorlog" />
+	</root>
+
+</configuration>

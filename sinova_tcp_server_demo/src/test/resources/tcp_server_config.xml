@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<!-- 配置所有的消息schema -->
+	<bean id="loginReqSchema" class="sinova.tcp.protocol.simple.LoginReqSchema" />
+	<bean id="loginRespSchema" class="sinova.tcp.protocol.simple.LoginRespSchema" />
+	<bean id="pingReqSchema" class="sinova.tcp.protocol.simple.PingReqSchema" />
+	<bean id="pingRespSchema" class="sinova.tcp.protocol.simple.PingRespSchema" />
+	<bean id="logoutReqSchema" class="sinova.tcp.protocol.simple.LogoutReqSchema" />
+	<bean id="errorRespSchema" class="sinova.tcp.protocol.simple.ErrorRespSchema" />
+	<bean id="smsMtReqSchema" class="sinova.tcp.protocol.standard.demo.SmsMtReqSchema" />
+	<bean id="smsMtRespSchema" class="sinova.tcp.protocol.standard.demo.SmsMtRespSchema" />
+	<bean id="smsReportReqSchema" class="sinova.tcp.protocol.standard.demo.SmsReportReqSchema" />
+	<bean id="smsReportRespSchema" class="sinova.tcp.protocol.standard.demo.SmsReportRespSchema" />
+
+	<!-- 配置所有的消息处理action -->
+	<bean id="errorRespAction" class="sinova.tcp.framework.action.simple.ErrorRespAction" />
+	<bean id="smsMtReqAction" class="sinova.tcp.server.demo.action.SmsMtReqAction" />
+	<bean id="smsReportRespAction" class="sinova.tcp.server.demo.action.SmsReportRespAction" />
+
+	<!-- 请求命令的关联信息集合 -->
+	<util:list id="reqCommandReferenceList" value-type="sinova.tcp.framework.common.protostuff.config.ProtoReqCommandReference">
+		<!-- 登录请求关联信息（没有对应的ReqAction） -->
+		<bean class="sinova.tcp.framework.common.protostuff.config.ProtoReqCommandReference" p:commandId="1"
+			p:commandClass="sinova.tcp.protocol.simple.LoginReq" p:reqSchema-ref="loginReqSchema" />
+		<!-- PING请求关联信息（没有对应的ReqAction） -->
+		<bean class="sinova.tcp.framework.common.protostuff.config.ProtoReqCommandReference" p:commandId="3"
+			p:commandClass="sinova.tcp.protocol.simple.PingReq" p:reqSchema-ref="pingReqSchema" />
+		<!-- 登出请求关联信息（没有对应的ReqAction） -->
+		<bean class="sinova.tcp.framework.common.protostuff.config.ProtoReqCommandReference" p:commandId="5"
+			p:commandClass="sinova.tcp.protocol.simple.LogoutReq" p:reqSchema-ref="logoutReqSchema" />
+		<!-- 短信下行请求关联信息 -->
+		<bean class="sinova.tcp.framework.common.protostuff.config.ProtoReqCommandReference" p:commandId="7"
+			p:commandClass="sinova.tcp.protocol.standard.demo.SmsMtReq" p:reqSchema-ref="smsMtReqSchema" p:reqAction-ref="smsMtReqAction" />
+		<!-- 状态报告请求关联信息 -->
+		<bean class="sinova.tcp.framework.common.protostuff.config.ProtoReqCommandReference" p:commandId="9"
+			p:commandClass="sinova.tcp.protocol.standard.demo.SmsReportReq" p:reqSchema-ref="smsReportReqSchema" />
+	</util:list>
+	<!-- 响应命令的关联信息集合 -->
+	<util:list id="respCommandReferenceList" value-type="sinova.tcp.framework.common.protostuff.config.ProtoRespCommandReference">
+		<!-- 登录响应关联信息 -->
+		<bean class="sinova.tcp.framework.common.protostuff.config.ProtoRespCommandReference" p:commandId="2"
+			p:commandClass="sinova.tcp.protocol.simple.LoginResp" p:respSchema-ref="loginRespSchema" />
+		<!-- PING响应关联信息 -->
+		<bean class="sinova.tcp.framework.common.protostuff.config.ProtoRespCommandReference" p:commandId="4"
+			p:commandClass="sinova.tcp.protocol.simple.PingResp" p:respSchema-ref="pingRespSchema" />
+		<!-- 消息错误处理信息 -->
+		<bean class="sinova.tcp.framework.common.protostuff.config.ProtoRespCommandReference" p:commandId="1002"
+			p:commandClass="sinova.tcp.protocol.simple.ErrorResp" p:respSchema-ref="errorRespSchema" p:respAction-ref="errorRespAction" />
+		<!-- 短信下行响应关联信息 -->
+		<bean class="sinova.tcp.framework.common.protostuff.config.ProtoRespCommandReference" p:commandId="8"
+			p:commandClass="sinova.tcp.protocol.standard.demo.SmsMtResp" p:respSchema-ref="smsMtRespSchema" />
+		<!-- 状态报告响应关联信息 -->
+		<bean class="sinova.tcp.framework.common.protostuff.config.ProtoRespCommandReference" p:commandId="10"
+			p:commandClass="sinova.tcp.protocol.standard.demo.SmsReportResp" p:respSchema-ref="smsReportRespSchema"
+			p:respAction-ref="smsReportRespAction" />
+	</util:list>
+
+	<!-- 注册服务端的Channel处理器集合 -->
+	<util:list id="serverChannelHandlers" list-class="java.util.LinkedList" value-type="io.netty.channel.ChannelHandler">
+		<!-- 服务端接收客户登录请求处理器 -->
+		<bean class="sinova.tcp.framework.server.handler.ServerReceiveLoginReqHandler" />
+		<!-- 接收心跳请求处理器 -->
+		<bean class="sinova.tcp.framework.common.handler.ReceivePingReqHandler" />
+		<!-- 接收心跳响应处理器 -->
+		<bean class="sinova.tcp.framework.common.handler.ReceivePingRespHandler" />
+		<!-- 接收登出响应处理器 -->
+		<bean class="sinova.tcp.framework.server.handler.ServerReceiveLogoutReqHandler" />
+		<!-- 服务端业务处理handler -->
+		<bean class="sinova.tcp.framework.server.handler.ServerMsgProcessHandler" />
+	</util:list>
+
+</beans>
