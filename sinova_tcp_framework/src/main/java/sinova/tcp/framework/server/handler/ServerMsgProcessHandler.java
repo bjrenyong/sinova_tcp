@@ -14,10 +14,12 @@ import sinova.tcp.framework.server.entity.ServerUserBase;
 import sinova.tcp.framework.server.service.IServerConnectService;
 import sinova.tcp.framework.server.service.IServerSpeedService;
 import sinova.tcp.framework.server.service.IServerUserService;
+import sinova.tcp.protocol.IReq;
 
 /**
  * 业务请求和业务响应的接收处理--服务端侧<br/>
- * 速度计数器在client和server的不同handler分别注入，有助于解决同一应用既有client端又有server端的情况使用注解
+ * 速度计数器在client和server的不同handler分别注入，有助于解决同一应用既有client端又有server端的情况使用注解<br>
+ * 目前涉及用户权限的逻辑中，仅涉及了通道本身的发送和接收权限，没有涉及数据权限，如果需要内置数据权限则需要一定的代码重构<br>
  * @author Timothy
  */
 @Sharable
@@ -50,7 +52,9 @@ public class ServerMsgProcessHandler extends AbsMsgProcessHandler {
 	}
 
 	@Override
-	protected boolean isAllowReceiveReq(int userId) {
+	protected boolean isAllowReceiveReq(int userId, IReq req) {
+		// 仅判断了连接类型的权限，目前够用
+		// 具体的数据权限，可以在相应的action类中实现
 		ServerUserBase serverUser = serverUserService.getServerUserByUserId(userId);
 		// 对于全双工和仅下行的连接类型，服务端允许接收来自客户端的业务请求
 		if (serverUser.getConnectionType() == FrameworkConstants.CONNECTION_TYPE_ALL

@@ -266,6 +266,7 @@ public class ServerConnectService implements IServerConnectService<ServerUserBas
 			throw new BusinessException(TcpErrorCode.ERRORCODE_TCP_CONNECTION);
 		}
 		// 判断用户的连接类型是否允许服务端的业务发送请求
+		// 注意，没有考虑用户的请求数据权限，目前够用
 		if (!isAllowReqSend(serverUser)) {
 			// 连接类型决定了该用户的服务端不被允许业务请求发送
 			logger.warn("the connect type not allow send business request, discard the message! userId="

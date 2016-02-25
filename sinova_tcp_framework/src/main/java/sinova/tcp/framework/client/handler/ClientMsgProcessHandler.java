@@ -15,10 +15,12 @@ import sinova.tcp.framework.common.handler.AbsMsgProcessHandler;
 import sinova.tcp.framework.common.monitor.IOverFalseSpeed;
 import sinova.tcp.framework.common.protocol.TransportMsg;
 import sinova.tcp.framework.common.window.WindowMsg;
+import sinova.tcp.protocol.IReq;
 
 /**
  * 业务请求和业务响应的接收处理器--客户端侧<br/>
- * 速度计数器在client和server的不同handler分别注入，有助于解决同一应用既有client端又有server端的情况使用注解
+ * 速度计数器在client和server的不同handler分别注入，有助于解决同一应用既有client端又有server端的情况使用注解<br>
+ * 目前涉及用户权限的逻辑中，仅涉及了通道本身的发送和接收权限，没有涉及数据权限，如果需要内置数据权限则需要一定的代码重构<br>
  * @author Timothy
  */
 @Service
@@ -53,7 +55,7 @@ public class ClientMsgProcessHandler extends AbsMsgProcessHandler {
 	}
 
 	@Override
-	protected boolean isAllowReceiveReq(int userId) {
+	protected boolean isAllowReceiveReq(int userId, IReq req) {
 		return clientConnectService.isAllowReqReceive();
 	}
 

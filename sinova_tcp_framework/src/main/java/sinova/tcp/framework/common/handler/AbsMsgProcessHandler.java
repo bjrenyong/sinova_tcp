@@ -61,7 +61,7 @@ public abstract class AbsMsgProcessHandler extends SimpleChannelInboundHandler<T
 			// 接收用户请求计数+1
 			addReceiveCount(userId, 1);
 			// 如果用户的连接类型不允许接收业务请求，抛出异常并断开连接
-			if (!isAllowReceiveReq(userId)) {
+			if (!isAllowReceiveReq(userId, (IReq) msg)) {
 				// 连接类型不允许接收来自对方的业务请求
 				String errorMsg = "the connect type not allow receive business request! userId=" + userId;
 				logger.error(errorMsg);
@@ -200,11 +200,16 @@ public abstract class AbsMsgProcessHandler extends SimpleChannelInboundHandler<T
 	protected abstract void addReceiveCount(int userId, int count);
 
 	/**
-	 * 判断是否可以接收业务请求
+	 * 判断是否可以接收业务请求<br>
+	 * 实现类既可以根据自己的需要去实现具体的逻辑：<br>
+	 * 示例1：无条件可以，直接返回true<br>
+	 * 示例2：判断某用户是否允许接收请求<br>
+	 * 示例3：判断某用户是否允许接收某类请求消息<br>
 	 * @param userId 用户ID
+	 * @param req 请求消息
 	 * @return boolean
 	 */
-	protected abstract boolean isAllowReceiveReq(int userId);
+	protected abstract boolean isAllowReceiveReq(int userId, IReq req);
 
 	/**
 	 * 判断是否该用户的业务请求速度合法（合法返回true，否则返回false）
