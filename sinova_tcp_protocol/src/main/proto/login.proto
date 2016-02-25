@@ -1,0 +1,21 @@
+option java_package = "sinova.tcp.protocol.simple";
+
+message LoginReq {
+    //登录用户ID
+    required int32 user_id = 1;
+    //登录用户名
+    required string app_name = 2;
+    //登录密码
+    required string auth_origin = 3;
+    //时间戳
+    required int64 timestamp = 4;
+}
+
+message LoginResp {
+    // 登录是否成功
+    required bool success = 1;
+    // 登录错误码
+    required string error_code = 2;
+    // 连接类型
+    required int32 connection_type = 3;
+}

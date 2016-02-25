@@ -1,0 +1,4 @@
+option java_package = "sinova.tcp.protocol.simple";
+
+message LogoutReq {
+}
