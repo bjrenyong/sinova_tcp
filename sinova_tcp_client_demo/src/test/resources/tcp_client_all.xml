@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<context:property-placeholder location="tcp_client.properties" ignore-unresolvable="true" />
+
+	<!-- 扫描框架公共包及其protostuff实现 -->
+	<context:component-scan base-package="sinova.tcp.framework.common">
+		<!-- 排除标准版实现 -->
+		<context:exclude-filter type="regex" expression="sinova.tcp.framework.common.standard.*" />
+	</context:component-scan>
+	<!-- 扫描框架client包 -->
+	<context:component-scan base-package="sinova.tcp.framework.client" />
+	<!-- 扫描 demo服务包 -->
+	<context:component-scan base-package="sinova.tcp.client.demo.service" />
+	<!-- 注入短信下行发送线程 -->
+	<bean class="sinova.tcp.client.demo.sender.SmsMtAsyncSender" />
+
+	<!-- 以下注入用于测试 -->
+	<!-- 扫描框架测试包 -->
+	<context:component-scan base-package="sinova.tcp.framework.test" />
+	<!-- 扫描client测试包 -->
+	<context:component-scan base-package="sinova.tcp.client.demo.test" />
+
+	<import resource="tcp_client_config.xml" />
+	<import resource="tcp_client_sender.xml" />
+	<import resource="tcp_client_test.xml" />
+</beans>

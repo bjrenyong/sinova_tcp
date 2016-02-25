@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean id="smsMtTestAction" class="sinova.tcp.client.demo.test.SmsMtTestAction">
+		<property name="smsContent" value="100" />
+		<property name="mobileNumBegin" value="18000000001" />
+		<property name="smsMtQueueProducer" ref="smsMtQueueProducer" />
+	</bean>
+
+	<bean id="smsMtSyncTestAction" class="sinova.tcp.client.demo.test.SmsMtSyncTestAction">
+		<property name="smsContent" value="aaaaaa" />
+		<property name="mobileNumBegin" value="18000000001" />
+		<property name="clientConnectService" ref="clientConnectService" />
+	</bean>
+
+	<!-- 配置所有的测试用命令 -->
+	<util:list id="testCommands" value-type="sinova.tcp.framework.test.TestCommand">
+		<bean class="sinova.tcp.framework.test.TestCommand" c:command="help" c:commandRegex="help" c:useage="print all commands"
+			c:testAction-ref="helpTestAction" />
+		<bean class="sinova.tcp.framework.test.TestCommand" c:command="exit" c:commandRegex="exit" c:useage="system exit"
+			c:testAction-ref="exitTestAction" />
+		<bean class="sinova.tcp.framework.test.TestCommand" c:command="netty connect" c:commandRegex="netty connect"
+			c:useage="netty connection connect" c:testAction-ref="nettyConnectTestAction" />
+		<bean class="sinova.tcp.framework.test.TestCommand" c:command="netty close" c:commandRegex="netty close"
+			c:useage="netty connection close" c:testAction-ref="nettyCloseTestAction" />
+		<bean class="sinova.tcp.framework.test.TestCommand" c:command="sms mt [sendCount]" c:commandRegex="sms mt [0-9]+"
+			c:useage="sms mt sendCount times" c:testAction-ref="smsMtTestAction" />
+		<bean class="sinova.tcp.framework.test.TestCommand" c:command="sms sync mt [sendCount]" c:commandRegex="sms sync mt [0-9]+"
+			c:useage="sms sync mt sendCount times" c:testAction-ref="smsMtSyncTestAction" />
+	</util:list>
+
+	<!-- 短信下行文件到队列生产者 -->
+	<bean id="smsMtFileToQueueProducer" class="sinova.tcp.client.demo.test.SmsMtFileToQueueProducer" init-method="init">
+		<!-- tcp client状态，扫描得到bean -->
+		<property name="tcpClientStatus" ref="tcpAppStatus" />
+		<property name="sourceDir" value="G:/temp/sinova_tcp_client_demo/source/sms_mt" />
+		<property name="targetDir" value="G:/temp/sinova_tcp_client_demo/target/sms_mt" />
+		<property name="smsMtQueue" ref="smsMtQueue" />
+		<property name="threadName" value="smsMtFileToQueueProducer" />
+	</bean>
+</beans>

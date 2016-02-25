@@ -41,3 +41,11 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+*.project
+logs/sinova_tcp_client/common.2016-02-13.log
+.settings/org.eclipse.m2e.core.prefs
+*.log
+*.classpath
+*.prefs
+*.springBeans
+*.iml
